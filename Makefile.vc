@@ -1,0 +1,225 @@
+#
+# -- See update notes below -->
+#
+# This makefile only compiles the C files and the generated
+# jni stub and headrer files and produces a DLL.
+#
+#
+# Hint: To be placed in .../src and invoked from there,
+#       nmake -f Makefile.all
+
+# From the Visual Studio .NET 2003 Command Prompt:
+#    copy Makefile.all ..\src
+#    cd ..\src
+#    nmake -f Makefile.all
+#
+# Author: IT
+# Date:   Oct 2000
+# $Id: Makefile.all,v 1.3 2007/02/12 07:22:06 ttey Exp $
+#
+# -- Updated for Win32 instance, EMXOREN Apr 09, 2002 -->
+# -- For runtime convenience copy '*.dll', '*.jar' as necessary.
+# -- Copy the 'jmagick.dll' to MAGICK_HOME (e.g. 'MAGICBIN' below).
+# -- Copy the 'jmagick.jar' to JRE's 'lib/ext'.
+# -- Just always rebuilt ALL, it's fast and somewhat fixed anyway!
+# -- Run 'javac', 'jar', 'javah' respectively prior to 'cl', 'link'.
+# -- Disabled warnings as it was kind of noisy.
+# -- Setup VC++ environment "path" for 'cl', 'link' and 'lib'.
+# -- Created manually 'obj\magick', 'lib' place holders.
+# -- Created manually 'classes', 'generated', 'docs' place holders.
+# changed by Sava Slijepcevic
+#
+# Author: KLS
+# Date:   Jan 2007
+# $Id: Makefile.all,v 1.3 2007/02/12 07:22:06 ttey Exp $
+#
+# Updated Makefile for Visual Studio .NET 2003, JDK1.6 (Java 6), and
+# added missing targets from the current JMagick.  JMagick is also
+# rumored to be buildable using gcc/MinGW, but this Makefile does not
+# target that compiler; instead I suppose you use MSYS or Cygwin and
+# the configure script.
+#
+#
+# Author: Jacob Nordfalk
+# Date:   Feb 2008
+#
+# Added comments and mkdir commands to make sure make doesent fail 
+# becaurse of missing intermediary or output directories.
+# added invocation of Manifest Tool (mt.exe) and javac -target 1.5
+
+CPP=cl.exe
+LINK32=link.exe
+#CPP=x86_64-w64-mingw32-g++.exe
+#LINK32=x86_64-w64-mingw32-ld.exe
+
+# The C compiler
+#CPPINC=C:\Program Files\Microsoft Visual Studio 8\VC\include
+#CPPLIB=C:\Program Files\Microsoft Visual Studio 8\VC\Lib
+CPPINC=c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include
+CPPLIB=c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\lib\amd64
+
+OUTDIR=lib
+INTDIR=obj/magick
+SRCDIR=src/magick
+GENDIR=generated
+CLSDIR=classfiles
+DOCDIR=doc
+
+# File places for Java:
+JDKDIR=C:\Program Files\Java\jdk1.6.0_24
+JNIINC=$(JDKDIR)\include
+JDKBIN=$(JDKDIR)\bin
+
+# File places for standard ImageMagick:
+MAGICKDIR=c:\Program Files\ImageMagick-6.9.0-Q16
+MAGICKINC=$(MAGICKDIR)
+MAGICKLIB=$(MAGICKDIR)\lib\CORE_RL_magick_.lib
+MAGICKINCDIR=$(MAGICKDIR)\include
+
+# If you compile IM yourself this might be better
+#MAGICKDIR=C:\Jacob\IM\c_kompilering\beta\bin
+#MAGICKINC=C:\Jacob\IM\c_kompilering\beta\ImageMagick
+#MAGICKLIB=C:\Jacob\IM\c_kompilering\beta\lib\CORE_RL_magick_.lib
+#MAGICKINCDIR=$(MAGICKDIR)
+
+
+# The jmagick.jar file will be installed here:
+JREEXT=$(JDKDIR)/lib/ext
+#JREEXT=$(MAGICKDIR)
+
+
+# The jmagick.dll file will be installed here:
+MAGICKBIN=$(MAGICKDIR)
+
+# Debugging, no optimizing and stack checks are required.
+# It hangs otherwise (re: IT) !?
+
+CPP_FLAGS= \
+    /nologo /MTd /TC /w /EHsc /Od  /Gs0 /Fo"$(INTDIR)\\" /c /favor:AMD64 \
+    /D "WIN64" /D "NDEBUG" /D "DIAGNOSTIC" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" \
+    /D "JMAGICK_EXPORTS"  /D "_VISUALC_" /I "$(CPPINC)" \
+    /I "$(JNIINC)" /I "$(JNIINC)\win32" /I "$(MAGICKINC)" \
+    /I "$(GENDIR)" /I "$(SRCDIR)" /I "$(MAGICKINCDIR)"
+
+LINK32_FLAGS= \
+    "$(MAGICKLIB)"  \
+    /nologo /dll /incremental:no /machine:x64 \
+    /libpath:"$(CPPLIB)"   \
+    /libpath:"c:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Lib\x64" \
+    /out:"$(OUTDIR)\jmagick.dll" \
+    /implib:"$(OUTDIR)\jmagick.lib" \
+    /SUBSYSTEM:CONSOLE \
+
+#/SUBSYSTEM:CONSOLE \
+#/NODEFAULTLIB:Msvcrt.lib \
+#/MANIFEST \
+
+LINK32_OBJS= \
+    "$(INTDIR)/jmagick.obj"    \
+    "$(INTDIR)/magick_Magick.obj" \
+    "$(INTDIR)/magick_MontageInfo.obj" \
+    "$(INTDIR)/magick_DrawInfo.obj"     \
+    "$(INTDIR)/magick_ImageInfo.obj"    \
+    "$(INTDIR)/magick_MagickInfo.obj"	\
+    "$(INTDIR)/magick_PixelPacket.obj"  \
+    "$(INTDIR)/magick_QuantizeInfo.obj" \
+    "$(INTDIR)/magick_MagickImage.obj"  \
+
+
+LINK32_OBJSD="$(INTDIR)/jmagick.obj" \
+"$(INTDIR)/Magick_DrawInfo.obj"     \
+"$(INTDIR)/Magick_ImageInfo.obj"    \
+"$(INTDIR)/Magick_MagickImage.obj"  \
+"$(INTDIR)/Magick_MagickInfo.obj"  \
+"$(INTDIR)/Magick_MontageInfo.obj"  \
+"$(INTDIR)/Magick_Magick.obj" \
+"$(INTDIR)/Magick_PixelPacket.obj"  \
+"$(INTDIR)/Magick_QuantizeInfo.obj"
+
+ALL : CLEAN BUILD
+
+BUILD : DIRS CLASSES DOCS HEADERS DLL
+
+DLL:  $(OUTDIR)/jmagick.dll
+
+
+
+"$(INTDIR)/jmagick.obj": $(SRCDIR)/jmagick.c
+	$(CPP)  $(CPP_FLAGS) $(CPP_PROJ)  /Tc $?
+
+"$(INTDIR)/magick_DrawInfo.obj": $(SRCDIR)/magick_DrawInfo.c
+	$(CPP)  $(CPP_FLAGS) $(CPP_PROJ)  /Tc $?
+
+"$(INTDIR)/magick_ImageInfo.obj": $(SRCDIR)/magick_ImageInfo.c
+	$(CPP)  $(CPP_FLAGS) $(CPP_PROJ)  /Tc $?
+
+"$(INTDIR)/magick_Magick.obj": $(SRCDIR)/magick_Magick.c
+	$(CPP)  $(CPP_FLAGS) $(CPP_PROJ)  /Tc $?
+
+"$(INTDIR)/magick_MagickImage.obj": $(SRCDIR)/magick_MagickImage.c
+	$(CPP)  $(CPP_FLAGS) $(CPP_PROJ)  /Tc $?
+
+"$(INTDIR)/magick_MagickInfo.obj": $(SRCDIR)/magick_MagickInfo.c
+	$(CPP)  $(CPP_FLAGS) $(CPP_PROJ)  /Tc $?
+
+"$(INTDIR)/magick_MontageInfo.obj": $(SRCDIR)/magick_MontageInfo.c
+	$(CPP)  $(CPP_FLAGS) $(CPP_PROJ)  /Tc $?
+
+"$(INTDIR)/magick_PixelPacket.obj": $(SRCDIR)/magick_PixelPacket.c
+	$(CPP)  $(CPP_FLAGS) $(CPP_PROJ)  /Tc $?
+
+"$(INTDIR)/magick_QuantizeInfo.obj": $(SRCDIR)/magick_QuantizeInfo.c
+	$(CPP)  $(CPP_FLAGS) $(CPP_PROJ)  /Tc $?
+
+#$(MAGICKBIN)/jmagick.dll : $(OUTDIR)/jmagick.dll
+	#copy $(?) "$(MAGICKBIN)"
+
+$(OUTDIR)/jmagick.dll : $(LINK32_OBJS)
+	$(LINK32) $(LINK32_FLAGS) $(LINK32_OBJSD)
+	#mt.exe -manifest $@.manifest -outputresource:$@;2 
+
+
+{$(SRCDIR)}.c{$(INTDIR)}.obj::
+	$(CPP) $(CPP_FLAGS) $<
+
+
+CLEAN :
+	-@rm -f "$(INTDIR)/jmagick.obj"
+	-@rm -f "$(INTDIR)/magick_Magick.obj"
+	-@rm -f "$(INTDIR)/magick_MontageInfo.obj"
+	-@rm -f "$(INTDIR)/magick_DrawInfo.obj"
+	-@rm -f "$(INTDIR)/magick_ImageInfo.obj"
+	-@rm -f "$(INTDIR)/magick_MagickImage.obj"
+	-@rm -f "$(INTDIR)/magick_PixelPacket.obj"
+	-@rm -f "$(INTDIR)/magick_QuantizeInfo.obj"
+	-@rm -f "$(OUTDIR)/jmagick.dll"
+	-@rm -f "$(OUTDIR)/jmagick.exp"
+	-@rm -f "$(OUTDIR)/jmagick.lib"
+
+
+# The following items are always rebuilt ...
+DIRS :
+	-mkdir -p "$(OUTDIR)"
+	-mkdir -p "$(INTDIR)"
+	-mkdir -p "$(GENDIR)"
+	-mkdir -p "$(DOCDIR)"
+
+
+HEADERS :    $(GENDIR)
+	"$(JDKBIN)/javah" -d $(GENDIR) -classpath $(CLSDIR) -jni magick.Magick
+	"$(JDKBIN)/javah" -d $(GENDIR) -classpath $(CLSDIR) -jni magick.DrawInfo
+	"$(JDKBIN)/javah" -d $(GENDIR) -classpath $(CLSDIR) -jni magick.ImageInfo
+	"$(JDKBIN)/javah" -d $(GENDIR) -classpath $(CLSDIR) -jni magick.MagickImage
+	"$(JDKBIN)/javah" -d $(GENDIR) -classpath $(CLSDIR) -jni magick.MagickInfo
+	"$(JDKBIN)/javah" -d $(GENDIR) -classpath $(CLSDIR) -jni magick.MontageInfo
+	"$(JDKBIN)/javah" -d $(GENDIR) -classpath $(CLSDIR) -jni magick.PixelPacket
+	"$(JDKBIN)/javah" -d $(GENDIR) -classpath $(CLSDIR) -jni magick.QuantizeInfo
+
+CLASSES : $(SRCDIR)/*.java $(SRCDIR)/util/*.java
+	mkdir -p $(CLSDIR)
+	"$(JDKBIN)/javac" -target 1.6 -d $(CLSDIR) -classpath $(SRCDIR) -sourcepath $(SRCDIR) $(?)
+	"$(JDKBIN)/jar" -cvf $(OUTDIR)/jmagick.jar -C $(CLSDIR) magick
+	#cp "$(OUTDIR)/jmagick.jar" "$(JREEXT)"
+
+DOCS :    $(DOCDIR)
+	"$(JDKBIN)/javadoc" -author -version -d $(DOCDIR) -sourcepath $(SRCDIR)/.. magick magick.util

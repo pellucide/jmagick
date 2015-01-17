@@ -25,7 +25,7 @@ JNIEXPORT jobject JNICALL Java_magick_PixelPacket_queryColorDatabase
     ExceptionInfo exception;
 
     cstr = (*env)->GetStringUTFChars(env, target, 0);
-    GetExceptionInfo(&exception);
+    ClearMagickException(&exception);
     result = QueryColorDatabase(cstr, &iPixelPacket, &exception);
     (*env)->ReleaseStringUTFChars(env, target, cstr);
 

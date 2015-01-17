@@ -560,7 +560,7 @@ unsigned char* getByteArrayFieldValue(JNIEnv *env,
 
     /* Get and copy the array elements */
     byteArray = (jbyte *) (*env)->GetByteArrayElements(env, byteArrayObj, 0);
-    byteArrayCpy = (unsigned char *) AcquireMemory(*size);
+    byteArrayCpy = (unsigned char *) AcquireMagickMemory(*size);
     if (byteArray == NULL) {
         return NULL;
     }

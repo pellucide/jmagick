@@ -31,7 +31,7 @@ JNIEXPORT void JNICALL Java_magick_MontageInfo_init
     montageInfo =
         (MontageInfo*) getHandle(env, self, "montageInfoHandle", NULL);
     if (montageInfo == NULL) {
-        montageInfo = (MontageInfo*) AcquireMemory(sizeof(MontageInfo));
+        montageInfo = (MontageInfo*) AcquireMagickMemory(sizeof(MontageInfo));
         if (montageInfo == NULL) {
             throwMagickException(env,
                                  "Unable to allocate "

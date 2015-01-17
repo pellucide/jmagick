@@ -24,7 +24,7 @@ JNIEXPORT void JNICALL Java_magick_MagickInfo_init
     
     magickInfo = (MagickInfo*) getHandle(env, self, "magickInfoHandle", &fid);
 
-    GetExceptionInfo(&exception);
+    ClearMagickException(&exception);
 
     cstr = (*env)->GetStringUTFChars(env, modname, 0);
     if (cstr == NULL)

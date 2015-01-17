@@ -4129,24 +4129,24 @@ fi
 
 if test -n "${JAVA_INCLUDE_PATH}" -a -d "${JAVA_INCLUDE_PATH}" ; then
 		JAVA_INCLUDES=-I${JAVA_INCLUDE_PATH}
-elif test -d ${JAVA_HOME}/include ; then
+elif test -d "${JAVA_HOME}/include" ; then
 	JAVA_INCLUDES=-I${JAVA_HOME}/include
-		if test -d ${JAVA_HOME}/include/genunix ; then
+		if test -d "${JAVA_HOME}/include/genunix" ; then
 		JAVA_INCLUDES="$JAVA_INCLUDES -I${JAVA_HOME}/include/genunix"
 	fi
-		if test -d ${JAVA_HOME}/include/linux ; then
+		if test -d "${JAVA_HOME}/include/linux" ; then
 		JAVA_INCLUDES="$JAVA_INCLUDES -I${JAVA_HOME}/include/linux"
 	fi
-		if test -d ${JAVA_HOME}/include/solaris ; then
+		if test -d "${JAVA_HOME}/include/solaris" ; then
 		JAVA_INCLUDES="$JAVA_INCLUDES -I${JAVA_HOME}/include/solaris"
 	fi
-		if test -d ${JAVA_HOME}/include/freebsd ; then
+		if test -d "${JAVA_HOME}/include/freebsd" ; then
 		JAVA_INCLUDES="$JAVA_INCLUDES -I${JAVA_HOME}/include/freebsd"
 	fi
-		if test -d ${JAVA_HOME}/include/win32 ; then
+		if test -d "${JAVA_HOME}/include/win32" ; then
 		JAVA_INCLUDES="$JAVA_INCLUDES -I${JAVA_HOME}/include/win32"
 	fi
-        if test -d ${JAVA_HOME}/include/bsd ; then
+        if test -d "${JAVA_HOME}/include/bsd" ; then
                 JAVA_INCLUDES="$JAVA_INCLUDES -I${JAVA_HOME}/include/bsd"
         fi
 elif test -d ${JAVA_HOME}/Headers; then

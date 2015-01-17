@@ -24,7 +24,7 @@ JNIEXPORT void JNICALL Java_magick_QuantizeInfo_init
 	(QuantizeInfo*) getHandle(env, self, "quantizeInfoHandle", &fid);
 
     if (quantizeInfo == NULL) {
-	quantizeInfo = (QuantizeInfo *) AcquireMemory(sizeof(QuantizeInfo));
+	quantizeInfo = (QuantizeInfo *) AcquireMagickMemory(sizeof(QuantizeInfo));
 	if (quantizeInfo == NULL) {
 	    throwMagickException(env, "Unable to allow memory for handle");
 	    return;

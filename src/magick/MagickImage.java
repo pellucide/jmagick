@@ -115,7 +115,7 @@ public class MagickImage extends Magick {
      */
     protected void finalize()
     {
-	destroyImages();
+        destroyImageList();
     }
 
     /**
@@ -449,7 +449,7 @@ public class MagickImage extends Magick {
     /**
      * Called by finalize to deallocate the image handle.
      */
-    public native void destroyImages();
+    public native void destroyImageList();
 
     /**
      * Draws a primitive (line, rectangle, ellipse) on the image.

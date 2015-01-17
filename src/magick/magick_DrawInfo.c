@@ -40,7 +40,7 @@ JNIEXPORT void JNICALL Java_magick_DrawInfo_init
     }
 
     /* Initialise and set the new DrawInfo handle. */
-    drawInfo = (DrawInfo*) AcquireMemory(sizeof(DrawInfo));
+    drawInfo = (DrawInfo*) AcquireMagickMemory(sizeof(DrawInfo));
     if (drawInfo == NULL) {
 	throwMagickException(env, "Memory allocation failure");
 	return;
@@ -110,7 +110,7 @@ JNIEXPORT void JNICALL Java_magick_DrawInfo_setPrimitive
     }
 
     if (is8bits) {
-        char *str = (char *) AcquireMemory(len+1);
+        char *str = (char *) AcquireMagickMemory(len+1);
         if (str == NULL) {
             throwMagickException(env, "Unable to allocate memory");
             (*env)->ReleaseStringChars(env, primitive, jstr);
@@ -221,7 +221,7 @@ JNIEXPORT void JNICALL Java_magick_DrawInfo_setText
     }
 
     if (is8bits) {
-        char *str = (char *) AcquireMemory(len+1);
+        char *str = (char *) AcquireMagickMemory(len+1);
         if (str == NULL) {
             throwMagickException(env, "Unable to allocate memory");
             (*env)->ReleaseStringChars(env, text, jstr);
@@ -547,7 +547,7 @@ JNIEXPORT void JNICALL Java_magick_DrawInfo_setTile
         return;
     }
 
-    GetExceptionInfo(&exception);
+    ClearMagickException(&exception);
     imgCopy = CloneImage(image, 0, 0, 1, &exception);
     if (imgCopy == NULL) {
         throwMagickApiException(env, "Unable to clone MagickImage",
@@ -558,7 +558,7 @@ JNIEXPORT void JNICALL Java_magick_DrawInfo_setTile
     DestroyExceptionInfo(&exception);
 
     if (drawInfo->tile != NULL) {
-        DestroyImages(drawInfo->tile);
+        DestroyImageList(drawInfo->tile);
     }
     drawInfo->tile = imgCopy;
 }
@@ -582,7 +582,7 @@ JNIEXPORT jobject JNICALL Java_magick_DrawInfo_getTile
         return NULL;
     }
 
-    GetExceptionInfo(&exception);
+    ClearMagickException(&exception);
     image = CloneImage(drawInfo->tile, 0, 0, 1, &exception);
     if (image == NULL) {
         throwMagickApiException(env, "Unable to clone image", &exception);
@@ -593,7 +593,7 @@ JNIEXPORT jobject JNICALL Java_magick_DrawInfo_getTile
 
     imgObj = newImageObject(env, image);
     if (imgObj == NULL) {
-        DestroyImages(image);
+        DestroyImageList(image);
         throwMagickException(env, "Unable to create image object from handle");
         return NULL;
     }

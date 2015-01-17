@@ -39,7 +39,7 @@ JNIEXPORT jint JNICALL Java_magick_Magick_parseImageGeometry
     }
 
     cstr = (const char *) (*env)->GetStringUTFChars(env, geometry, 0);
-    flags = ParseImageGeometry(cstr, &x, &y, &width, &height);
+    flags = GetGeometry(cstr, &x, &y, &width, &height);
     (*env)->ReleaseStringUTFChars(env, geometry, cstr);
 
     if (!setIntFieldValue(env, rect, "width", NULL, width) ||
