@@ -223,6 +223,37 @@ public class MagickImage extends Magick {
     public native void setDepth(int depth)
       throws MagickException;
 
+    /**
+     * getImageAlphaChannel() returns false if the image alpha channel
+     * is not activated. That is, the image is RGB rather than RGBA or
+     * CMYK rather than CMYKA.
+     */
+     public native boolean getImageAlphaChannel();
+
+    /**
+     * setImageAlphaChannel() activates, deactivates, resets, or sets
+     * the alpha channel.
+     * @param alphaChannelType the alpha channel type from constants
+     *        defined in the class AlphaChannelType
+     * @see AlphaChannelType
+     */
+     public native boolean setImageAlphaChannel(int alphaChannelType);
+
+
+    /**
+     * evaluateImageChannel()
+     * @param channelType the channel type from constants
+     *        defined in the class ChannelType
+     * @see ChannelType
+     *
+     * @param magickEvaluateOperator the evaluate operator type from constants
+     *        defined in the class MagickEvaluateOperator
+     * @see MagickEvaluateOperator
+     */
+     public native boolean evaluateImageChannel(int ChannelType, int magickEvaluateOperator, double val)
+	throws MagickException;
+
+
 
     /**
      * Blurs an image. We convolve the image with a Gaussian operator of

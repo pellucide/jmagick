@@ -47,16 +47,14 @@
 # becaurse of missing intermediary or output directories.
 # added invocation of Manifest Tool (mt.exe) and javac -target 1.5
 
-CPP=cl.exe
-LINK32=link.exe
-#CPP=x86_64-w64-mingw32-g++.exe
-#LINK32=x86_64-w64-mingw32-ld.exe
 
 # The C compiler
-#CPPINC=C:\Program Files\Microsoft Visual Studio 8\VC\include
-#CPPLIB=C:\Program Files\Microsoft Visual Studio 8\VC\Lib
 CPPINC=c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include
 CPPLIB=c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\lib\amd64
+CPPBIN=C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\amd64
+
+CPP=$(CPPBIN)/cl.exe
+LINK32=$(CPPBIN)/link.exe
 
 OUTDIR=lib
 INTDIR=obj/magick
@@ -106,6 +104,7 @@ LINK32_FLAGS= \
     /nologo /dll /incremental:no /machine:x64 \
     /libpath:"$(CPPLIB)"   \
     /libpath:"c:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Lib\x64" \
+    /libpath:"c:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Lib\x64" \
     /out:"$(OUTDIR)\jmagick.dll" \
     /implib:"$(OUTDIR)\jmagick.lib" \
     /SUBSYSTEM:CONSOLE \
@@ -145,37 +144,37 @@ DLL:  $(OUTDIR)/jmagick.dll
 
 
 "$(INTDIR)/jmagick.obj": $(SRCDIR)/jmagick.c
-	$(CPP)  $(CPP_FLAGS) $(CPP_PROJ)  /Tc $?
+	"$(CPP)"  $(CPP_FLAGS) $(CPP_PROJ)  /Tc $?
 
 "$(INTDIR)/magick_DrawInfo.obj": $(SRCDIR)/magick_DrawInfo.c
-	$(CPP)  $(CPP_FLAGS) $(CPP_PROJ)  /Tc $?
+	"$(CPP)"  $(CPP_FLAGS) $(CPP_PROJ)  /Tc $?
 
 "$(INTDIR)/magick_ImageInfo.obj": $(SRCDIR)/magick_ImageInfo.c
-	$(CPP)  $(CPP_FLAGS) $(CPP_PROJ)  /Tc $?
+	"$(CPP)"  $(CPP_FLAGS) $(CPP_PROJ)  /Tc $?
 
 "$(INTDIR)/magick_Magick.obj": $(SRCDIR)/magick_Magick.c
-	$(CPP)  $(CPP_FLAGS) $(CPP_PROJ)  /Tc $?
+	"$(CPP)"  $(CPP_FLAGS) $(CPP_PROJ)  /Tc $?
 
 "$(INTDIR)/magick_MagickImage.obj": $(SRCDIR)/magick_MagickImage.c
-	$(CPP)  $(CPP_FLAGS) $(CPP_PROJ)  /Tc $?
+	"$(CPP)"  $(CPP_FLAGS) $(CPP_PROJ)  /Tc $?
 
 "$(INTDIR)/magick_MagickInfo.obj": $(SRCDIR)/magick_MagickInfo.c
-	$(CPP)  $(CPP_FLAGS) $(CPP_PROJ)  /Tc $?
+	"$(CPP)"  $(CPP_FLAGS) $(CPP_PROJ)  /Tc $?
 
 "$(INTDIR)/magick_MontageInfo.obj": $(SRCDIR)/magick_MontageInfo.c
-	$(CPP)  $(CPP_FLAGS) $(CPP_PROJ)  /Tc $?
+	"$(CPP)"  $(CPP_FLAGS) $(CPP_PROJ)  /Tc $?
 
 "$(INTDIR)/magick_PixelPacket.obj": $(SRCDIR)/magick_PixelPacket.c
-	$(CPP)  $(CPP_FLAGS) $(CPP_PROJ)  /Tc $?
+	"$(CPP)"  $(CPP_FLAGS) $(CPP_PROJ)  /Tc $?
 
 "$(INTDIR)/magick_QuantizeInfo.obj": $(SRCDIR)/magick_QuantizeInfo.c
-	$(CPP)  $(CPP_FLAGS) $(CPP_PROJ)  /Tc $?
+	"$(CPP)"  $(CPP_FLAGS) $(CPP_PROJ)  /Tc $?
 
 #$(MAGICKBIN)/jmagick.dll : $(OUTDIR)/jmagick.dll
 	#copy $(?) "$(MAGICKBIN)"
 
 $(OUTDIR)/jmagick.dll : $(LINK32_OBJS)
-	$(LINK32) $(LINK32_FLAGS) $(LINK32_OBJSD)
+	"$(LINK32)" $(LINK32_FLAGS) $(LINK32_OBJSD)
 	#mt.exe -manifest $@.manifest -outputresource:$@;2 
 
 

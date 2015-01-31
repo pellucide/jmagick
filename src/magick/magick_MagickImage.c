@@ -531,6 +531,80 @@ setIntMethod(Java_magick_MagickImage_setDepth,
 
 /*
  * Class:     magick_MagickImage
+ * Method:    evaluateImageChannel
+ * Signature: (DD)Lmagick/MagickImage;
+ */
+JNIEXPORT jboolean JNICALL Java_magick_MagickImage_evaluateImageChannel
+(JNIEnv *env, jobject self, jint channelType, jint magickEvaluateOperator, jdouble val)
+{
+    Image *image = NULL;
+    jobject newObj;
+    ExceptionInfo *exception;
+
+    image = (Image*) getHandle(env, self, "magickImageHandle", NULL);
+    if (image == NULL) {
+        throwMagickException(env, "Cannot retrieve image handle");
+        return NULL;
+    }
+
+    exception = AcquireExceptionInfo();
+    ClearMagickException(exception);
+    jboolean result =  EvaluateImageChannel(image, channelType, magickEvaluateOperator, val, exception );
+    if (!result) {
+        throwMagickApiException(env, "Cannot evaluate Channeltype", exception);
+    }
+
+    DestroyExceptionInfo(exception);
+    return result;
+
+}
+
+
+/*
+ * Class:     magick_MagickImage
+ * Method:    getImageAlphaChannel
+ * Signature: (DD)Lmagick/MagickImage;
+ */
+JNIEXPORT jboolean JNICALL Java_magick_MagickImage_getImageAlphaChannel
+(JNIEnv *env, jobject self)
+{
+    Image *image = NULL;
+    jobject newObj;
+
+    image = (Image*) getHandle(env, self, "magickImageHandle", NULL);
+    if (image == NULL) {
+        throwMagickException(env, "Cannot retrieve image handle");
+        return 0;
+    }
+
+    return GetImageAlphaChannel(image);
+}
+
+
+
+/*
+ * Class:     magick_MagickImage
+ * Method:    setImageAlphaChannel
+ * Signature: (I)V
+ */
+JNIEXPORT jboolean JNICALL Java_magick_MagickImage_setImageAlphaChannel
+(JNIEnv *env, jobject self, jint alphaChannelType)
+{
+    Image *image = NULL;
+
+    image = (Image*) getHandle(env, self, "magickImageHandle", NULL);
+    if (image == NULL) {
+        throwMagickException(env, "No image to set file name");
+        return;
+    }
+    return SetImageAlphaChannel(image, alphaChannelType);
+
+}
+
+
+
+/*
+ * Class:     magick_MagickImage
  * Method:    getStorageClass
  * Signature: ()I
  */
