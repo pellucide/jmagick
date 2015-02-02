@@ -74,6 +74,10 @@ MAGICKINC=$(MAGICKDIR)
 MAGICKLIB=$(MAGICKDIR)\lib\CORE_RL_magick_.lib
 MAGICKINCDIR=$(MAGICKDIR)\include
 
+#MAGICK_DEBUG_DIR=C:\Users\jbrahma\Downloads\ImageMagick\ImageMagick-windows\ImageMagick-6.9.0\VisualMagick
+#MAGICKLIB=$(MAGICK_DEBUG_DIR)\lib\CORE_DB_magick_.lib
+
+
 # If you compile IM yourself this might be better
 #MAGICKDIR=C:\Jacob\IM\c_kompilering\beta\bin
 #MAGICKINC=C:\Jacob\IM\c_kompilering\beta\ImageMagick

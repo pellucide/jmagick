@@ -1,5 +1,4 @@
 package magick;
-
 public interface MagickEvaluateOperator {
     /* Important! Constant values should correspond to:
        http://www.imagemagick.org/api/MagickCore/statistic_8h_source.html#l00074
