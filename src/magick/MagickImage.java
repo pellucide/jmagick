@@ -223,6 +223,25 @@ public class MagickImage extends Magick {
     public native void setDepth(int depth)
       throws MagickException;
 
+
+    /*
+     * clipImagePath() sets the image clip mask based any clipping
+     *      path information  if it exists.
+     *
+     *      A description of each parameter follows:
+     *
+     *        o clipPathname: name of clipping path resource. If name is
+     *          preceded by #, use clipping path numbered by name.
+     *
+     *        o inside: if non-zero, later operations take effect inside
+     *          clipping path. Otherwise later operations take effect
+     *          outside clipping path.
+     *
+     * Signature: (DD)Lmagick/MagickImage;
+     */
+    public native boolean clipImagePath(String clipPathname, boolean inside);
+
+
     /**
      * getImageAlphaChannel() returns false if the image alpha channel
      * is not activated. That is, the image is RGB rather than RGBA or

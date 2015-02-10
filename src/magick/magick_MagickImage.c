@@ -556,8 +556,57 @@ JNIEXPORT jboolean JNICALL Java_magick_MagickImage_evaluateImageChannel
 
     DestroyExceptionInfo(exception);
     return result;
-
 }
+
+/*
+ * Class:       magick_MagickImage
+ * Method:      clipImagePath
+ * Description: clipImagePath() sets the image clip mask based any clipping
+ *              path information  if it exists.
+ *
+ *              The format of the clipImagePath method is:
+ *
+ *                  boolean clipImagePath(Image *image,const char *pathname,
+ *                    const MagickBooleanType inside)
+ *
+ *              A description of each parameter follows:
+ *
+ *                o image: the image.
+ *
+ *                o pathname: name of clipping path resource. If name is
+ *                  preceded by #, use clipping path numbered by name.
+ *
+ *                o inside: if non-zero, later operations take effect inside
+ *                  clipping path. Otherwise later operations take effect
+ *                  outside clipping path.
+ *
+ * Signature: (DD)Lmagick/MagickImage;
+ */
+JNIEXPORT jboolean JNICALL Java_magick_MagickImage_clipImagePath
+(JNIEnv *env, jobject self, jstring clipPathname, jboolean inside)
+{
+    Image *image = NULL;
+    const char *cstrClipPathname = NULL;
+
+    image = (Image*) getHandle(env, self, "magickImageHandle", NULL);
+    if (image == NULL) {
+        throwMagickException(env, "Cannot retrieve image handle");
+        return NULL;
+    }
+
+    cstrClipPathname = (*env)->GetStringUTFChars(env, clipPathname, 0);
+    if (cstrClipPathname == NULL) {
+        throwMagickException(env, "Unable to get clipPathname value");
+        return NULL;
+    }
+
+    jboolean result =  ClipImagePath(image, cstrClipPathname, inside);
+    (*env)->ReleaseStringUTFChars(env, clipPathname, cstrClipPathname);
+    return result;
+}
+
+
+
 
 
 /*
@@ -569,7 +618,6 @@ JNIEXPORT jboolean JNICALL Java_magick_MagickImage_getImageAlphaChannel
 (JNIEnv *env, jobject self)
 {
     Image *image = NULL;
-    jobject newObj;
 
     image = (Image*) getHandle(env, self, "magickImageHandle", NULL);
     if (image == NULL) {
