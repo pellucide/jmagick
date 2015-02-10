@@ -256,6 +256,43 @@ public class MagickImage extends Magick {
 
 
     /**
+     *  mergeImageLayers()
+     *  composes all the image layers from the current given
+     *  image onward to produce a single image of the merged layers.
+     *
+     *  The inital canvas's size depends on the given ImageLayerMethod, and is
+     *  initialized using the first images background color.  The images
+     *  are then compositied onto that image in sequence using the given
+     *  composition that has been assigned to each individual image.
+     *
+     *    @param method: the method of selecting the size of the initial canvas.
+     *    @see ImageLayerMethod
+     *
+     *        MergeLayer: Merge all layers onto a canvas just large enough
+     *           to hold all the actual images. The virtual canvas of the
+     *           first image is preserved but otherwise ignored.
+     *
+     *        FlattenLayer: Use the virtual canvas size of first image.
+     *           Images which fall outside this canvas is clipped.
+     *           This can be used to 'fill out' a given virtual canvas.
+     *
+     *        MosaicLayer: Start with the virtual canvas of the first image,
+     *           enlarging left and right edges to contain all images.
+     *           Images with negative offsets will be clipped.
+     *
+     *        TrimBoundsLayer: Determine the overall bounds of all the image
+     *           layers just as in "MergeLayer", then adjust the the canvas
+     *           and offsets to be relative to those bounds, without overlaying
+     *           the images.
+     *
+     *        WARNING: a new image is not returned, the original image
+     *           sequence page data is modified instead.
+     */
+     public native boolean mergeImageLayers(int ImageLayerMethod) throws MagickException;
+
+
+
+    /**
      * Blurs an image. We convolve the image with a Gaussian operator of
      * the given radius and standard deviation (sigma). For reasonable
      * results, the radius should be larger than sigma. Use a radius of 0

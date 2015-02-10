@@ -556,9 +556,36 @@ JNIEXPORT jboolean JNICALL Java_magick_MagickImage_evaluateImageChannel
 
     DestroyExceptionInfo(exception);
     return result;
-
 }
 
+/*
+ * Class:     magick_MagickImage
+ * Method:    mergeImageLayers
+ * Signature: (DD)Lmagick/MagickImage;
+ */
+JNIEXPORT jboolean JNICALL Java_magick_MagickImage_mergeImageLayers
+(JNIEnv *env, jobject self, jint layerOperationType)
+{
+    Image *image = NULL;
+    jobject newObj;
+    ExceptionInfo *exception;
+
+    image = (Image*) getHandle(env, self, "magickImageHandle", NULL);
+    if (image == NULL) {
+        throwMagickException(env, "Cannot retrieve image handle");
+        return NULL;
+    }
+
+    exception = AcquireExceptionInfo();
+    ClearMagickException(exception);
+    jboolean result =  MergeImageLayers(image, layerOperationType, exception);
+    if (!result) {
+        throwMagickApiException(env, "Cannot apply layer operation", exception);
+    }
+
+    DestroyExceptionInfo(exception);
+    return result;
+}
 
 /*
  * Class:     magick_MagickImage
