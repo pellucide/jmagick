@@ -2552,8 +2552,7 @@ JNIEXPORT jobject JNICALL Java_magick_MagickImage_resizeImage
 {
     const char *cropStr, *imageStr;
     jfieldID fieldID = 0;
-    Image *image =
-        (Image*) getHandle(env, self, "magickImageHandle", &fieldID);
+    Image *image = (Image*) getHandle(env, self, "magickImageHandle", &fieldID);
     if (image == NULL) {
         throwMagickException(env, "Cannot obtain image handle");
         return;
